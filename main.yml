@@ -1,0 +1,16 @@
+---
+- name: Test terraform ansible integration
+  hosts: localhost
+  tasks:
+
+    - name: Test using cloud.terraform.terraform to apply config
+      cloud.terraform.terraform:
+        project_path: ./files/
+        state: present
+        force_init: true
+
+    - name: Test using cloud.terraform.terraform to destroy config
+      cloud.terraform.terraform:
+        project_path: ./files/
+        state: absent
+        force_init: true
