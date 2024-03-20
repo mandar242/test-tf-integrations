@@ -1,0 +1,12 @@
+---
+- name: Test terraform ansible integration
+  hosts: localhost
+  tasks:
+
+    - name: Set up bucket in S3 for terraform remote backend
+      include_role:
+        name: cloud.terraform_ops.aws_s3backend
+      vars:
+        aws_s3backend_operation: create
+        aws_s3backend_bucket_name: "mandkulk-tf-test-bucket"
+        aws_s3backend_terraform_state_path: "terraform/my.tfstate"
