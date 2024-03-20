@@ -1,0 +1,10 @@
+# Run `ansible-inventory -i ansible_tf_inventory.terraform_state.yml --graph --vars`
+# if does not work, make sure you have aws creds at ~/.aws and gcp auth logged in
+
+# Inventory built from state file containing AWS and GCP instances
+plugin: cloud.terraform.terraform_state
+backend_type: s3
+backend_config:
+  bucket: "mandkulk-tf-test-bucket"
+  key: "terraform/my.tfstate"
+  region: "us-west-1"
