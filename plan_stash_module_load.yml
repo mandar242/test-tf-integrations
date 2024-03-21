@@ -1,0 +1,28 @@
+---
+- name: Test the plan_stash module
+  hosts: localhost
+  gather_facts: false
+  vars:
+    terraform_existing_config_url: "https://raw.githubusercontent.com/mandar242/Test-Playbooks/main/main.tf"
+    plan_stash_var_name_val: my_test_stashed_plan
+    plan_stash_plan_file_path_val: ./myplan.tfplan
+  tasks:
+
+    - name: Download terraform config file and store as "rand_string.tf"
+      uri:
+          dest: ./rand_string.tf
+          url: "{{ terraform_existing_config_url }}"
+      when: terraform_existing_config_url is defined and terraform_existing_config_url | length != 0
+
+    - name:  Load the Terraform plan from variable "{{ plan_stash_var_name_val }}" into file "{{ plan_stash_plan_file_path_val }}"
+      cloud.terraform.plan_stash:
+        state: load
+        var_name: "{{ plan_stash_var_name_val }}" # if not provided, defaults to "terraform_plan"
+        path: "{{ plan_stash_plan_file_path_val }}" #"path_to_my_plan_file"
+
+    - name: Apply the Terraform configuration
+      cloud.terraform.terraform:
+        project_path: "./"
+        force_init: true
+        plan_file: "{{ plan_stash_plan_file_path_val }}"
+        state: present
