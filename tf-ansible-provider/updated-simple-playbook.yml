@@ -1,0 +1,28 @@
+---
+# ++++++++++++++
+# Create an empty text file on a host
+# ++++++++++++++
+- hosts: all
+  vars:
+    simple_file: ~/simple-file.txt
+  tags:
+    - tag1
+  tasks:
+    - ansible.builtin.file:
+        path: "{{ simple_file }}"
+        state: touch
+
+# ++++++++++++++
+# Write into a text file on a host
+# ++++++++++++++
+- hosts: all
+  vars:
+    simple_file: ~/simple-file.txt
+  tags:
+    - tag2
+  tasks:
+    - ansible.builtin.copy:
+        content: |
+          Hello, World! THIS IS UPDATED FILE!
+          {{ content_from_a_var_file }}
+        dest: "{{ simple_file }}"
