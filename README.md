@@ -66,7 +66,7 @@ use `cloud.terraform.plan_stash` to `stash` the terraform plan to ansible stats.
 use `cloud.terraform.plan_stash` to `load` terraform plan from ansible stats to a plan file.
 ```
 
-### terraform-provider-ansible examples
+## terraform-provider-ansible
 ```
 ### tf-ansible-provider/tf-provider-ansible.tf
 
