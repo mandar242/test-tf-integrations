@@ -63,5 +63,7 @@ Terraform config file to generate random string.
 Terraform config file to create instance/vm in AWS and GCP.
 
 ### tf-ansible-provider/tf-provider-ansible.tf
-Terraform config file to create EC2 instance with required infrastructure to enable ssh.
+Terraform config file to 
+1. create EC2 instance with required infrastructure to enable ssh
+2. Use `Ansible Provider for Terraform` to add created EC2 instance to host groups using `ansible_host` and run playbooks on it using `ansible-playbook`
 Note: Before running change value of `aws_instance.mk-provider-test_ec2.key_name` to name of key stored in aws.

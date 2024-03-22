@@ -107,7 +107,7 @@ resource "aws_route_table_association" "route-table-association" {
 }
 
 # Create EC2 Instance ===========================================
-resource "aws_instance" "mk-provider-test_ec2" {
+resource "aws_instance" "mk_provider_test_ec2" {
   ami                         = data.aws_ami.instance_ami_al2.id
   instance_type               = "t2.micro"
   key_name        = "mandkulk-us-west-1-vms"
@@ -117,4 +117,74 @@ resource "aws_instance" "mk-provider-test_ec2" {
   tags = {
     "Name" = "mk-provider-test-instance"
   }
+}
+
+# ANSIBLE PROVIDER TESTS ============================================
+# Add created ec2 instance to ansible inventory
+resource "ansible_host" "my_ec2" {
+  name   = aws_instance.mk_provider_test_ec2.public_dns
+  groups = ["playbook-group-1"] # add ec2 instance to this group
+  variables = {
+    ansible_user                 = "ec2-user",
+    ansible_ssh_private_key_file = "~/path/to/mandkulk-us-west-1-vms.pem",
+    ansible_python_interpreter   = "/usr/bin/python3",
+  }
+}
+
+# RUN Playbook on EC2 instance - simple-playbook.yml
+resource "ansible_playbook" "example_playbook_run_1" {
+  ansible_playbook_binary = "ansible-playbook" # this parameter is optional, default is "ansible-playbook"
+  playbook                = "simple-playbook.yml"
+
+  # Inventory configuration
+  name   = ansible_host.my_ec2.name    # name of the host to use for inventory configuration
+  groups = ["playbook-group-1"] # list of groups to add our host to
+
+  # Limit this playbook to run only on the host named ansible_host.my_ec2.name
+  limit = [
+    ansible_host.my_ec2.name
+  ]
+  check_mode = false
+  diff_mode  = false
+  var_files = ["var-file.yml"]
+
+  # Connection configuration and other vars
+  extra_vars = {
+    # ansible_hostname   = docker_container.julia_the_first.name
+    # ansible_connection = "docker"
+    ansible_user                 = "ec2-user",
+    ansible_ssh_private_key_file = "~/path/to/mandkulk-us-west-1-vms.pem",
+    ansible_python_interpreter   = "/usr/bin/python3",
+  }
+  replayable = true
+  verbosity  = 3 # set the verbosity level of the debug output for this playbook
+}
+
+# RUN Playbook on EC2 instance - updated-simple-playbook.yml
+resource "ansible_playbook" "example_playbook_run_2" {
+  ansible_playbook_binary = "ansible-playbook" # this parameter is optional, default is "ansible-playbook"
+  playbook                = "updated-simple-playbook.yml"
+
+  # Inventory configuration
+  name   = ansible_host.my_ec2.name    # name of the host to use for inventory configuration
+  groups = ["playbook-group-1"] # list of groups to add our host to
+
+  # Limit this playbook to run only on the host named "julia-the-first"
+  limit = [
+    ansible_host.my_ec2.name
+  ]
+  check_mode = false
+  diff_mode  = false
+  var_files = ["var-file.yml"]
+
+  # Connection configuration and other vars
+  extra_vars = {
+    # ansible_hostname   = docker_container.julia_the_first.name
+    # ansible_connection = "docker"
+    ansible_user                 = "ec2-user",
+    ansible_ssh_private_key_file = "~/path/to/mandkulk-us-west-1-vms.pem",
+    ansible_python_interpreter   = "/usr/bin/python3",
+  }
+  replayable = true
+  verbosity  = 3 # set the verbosity level of the debug output for this playbook
 }
