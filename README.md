@@ -8,6 +8,23 @@ Repository contains code used for testing various terraform collection, roles
 `cloud.terraform_ops.aws_s3backend` to set up terraform remote backend in AWS S3 bucket.
 `ansible-playbook setup_remote_backend_s3.yml`
 
+### plan_stash_role_*.yml
+Note:
+Below playbooks should be used in AWX/Cotroller/Tower.
+To use
+1. Create Job templates for both playbooks.
+2. Create workflow template where playbook 1 runs, on success playbook 2 runs.
+
+#### plan_stash_role_stash.yml
+
+`cloud.terraform.plan_stash` to `stash` the terraform plan to ansible stats.
+`ansible-playbook plan_stash_role_stash.yml`
+
+#### plan_stash_role_load.yml
+
+`cloud.terraform.plan_stash` to `load` terraform plan from ansible stats to a plan file.
+`ansible-playbook plan_stash_role_load.yml`
+
 
 ## cloud.terraform
 ### apply_destroy_config.yml
@@ -42,5 +59,9 @@ To use
 ### rand_string.tf
 Terraform config file to generate random string.
 
-### files/main.tf
+### tf-aws-gcp-instance/main.tf
 Terraform config file to create instance/vm in AWS and GCP.
+
+### tf-ansible-provider/tf-provider-ansible.tf
+Terraform config file to create EC2 instance with required infrastructure to enable ssh.
+Note: Before running change value of `aws_instance.mk-provider-test_ec2.key_name` to name of key stored in aws.
