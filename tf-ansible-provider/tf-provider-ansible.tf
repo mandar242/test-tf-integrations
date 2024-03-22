@@ -150,8 +150,6 @@ resource "ansible_playbook" "example_playbook_run_1" {
 
   # Connection configuration and other vars
   extra_vars = {
-    # ansible_hostname   = docker_container.julia_the_first.name
-    # ansible_connection = "docker"
     ansible_user                 = "ec2-user",
     ansible_ssh_private_key_file = "~/path/to/mandkulk-us-west-1-vms.pem",
     ansible_python_interpreter   = "/usr/bin/python3",
@@ -169,7 +167,7 @@ resource "ansible_playbook" "example_playbook_run_2" {
   name   = ansible_host.my_ec2.name    # name of the host to use for inventory configuration
   groups = ["playbook-group-1"] # list of groups to add our host to
 
-  # Limit this playbook to run only on the host named "julia-the-first"
+  # Limit this playbook to run only on the host named ansible_host.my_ec2.name
   limit = [
     ansible_host.my_ec2.name
   ]
@@ -179,8 +177,6 @@ resource "ansible_playbook" "example_playbook_run_2" {
 
   # Connection configuration and other vars
   extra_vars = {
-    # ansible_hostname   = docker_container.julia_the_first.name
-    # ansible_connection = "docker"
     ansible_user                 = "ec2-user",
     ansible_ssh_private_key_file = "~/path/to/mandkulk-us-west-1-vms.pem",
     ansible_python_interpreter   = "/usr/bin/python3",
